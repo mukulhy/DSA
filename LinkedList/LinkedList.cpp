@@ -65,6 +65,78 @@ public:
         }
         return answer;
     }
+
+    // Delete head of the Linked List
+    Node* deleteHead() {
+        if (head == nullptr) {
+            // List is empty, nothing to delete
+            return nullptr;
+        }
+    
+        Node* temp = head;    // Store the current head
+        head = head->next;    // Move head to the next node
+        delete temp;          // Free the memory of the old head
+        return head;          // Return the new head
+    }
+
+    // Delete tail of the Linked List
+    void deleteTail() {
+        if (head == nullptr) {
+            // List is empty, nothing to delete
+            return;
+        }
+
+        // If there's only one node
+        if (head->next == nullptr) {
+            delete head;  // Delete the only node
+            head = nullptr;  // Set head to nullptr, list becomes empty
+            return;
+        }
+
+        // Traverse to the second-to-last node
+        Node* temp = head;
+        while (temp->next->next != nullptr) {
+            temp = temp->next;
+        }
+
+        // Delete the last node and set the second-to-last node's next to nullptr
+        delete temp->next;
+        temp->next = nullptr;
+    }
+
+    // Delete kth element in the Linked List
+    void deleteKthElement(int k) {
+        if (k <= 0 || head == nullptr) {
+            // Invalid position or list is empty
+            return;
+        }
+    
+        if (k == 1) {
+            // If k is 1, delete the head
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+            return;
+        }
+    
+        Node* temp = head;
+        // Traverse to the (k-1)th node
+        for (int i = 1; i < k - 1 && temp != nullptr; i++) {
+            temp = temp->next;
+        }
+    
+        // If temp is nullptr or temp->next is nullptr, k is out of bounds
+        if (temp == nullptr || temp->next == nullptr) {
+            return;
+        }
+    
+        // Store the k-th node and adjust pointers
+        Node* nodeToDelete = temp->next;
+        temp->next = temp->next->next;
+        delete nodeToDelete;
+    }
+    
+
 };
 
 // Main function to test the linked list creation and traversal
@@ -93,5 +165,24 @@ int main() {
     }
     cout << endl;
 
+    // Delete the head and update the head pointer
+    head = list.deleteHead();
+    // Display the updated linked list
+    cout << "Updated Linked List after deleting head: ";
+    list.display();
+    // Delete the head and update the head pointer
+    list.deleteTail();
+    // Display the updated linked list
+    cout << "Updated Linked List after deleting tail: ";
+    list.display();
+
+    cout << endl;
+
+    int k = 3;
+    list.deleteKthElement(k);
+    cout << "Updated Linked List after deleting " << k << "-th element: ";
+    list.display();
+
+    cout << endl;
     return 0;
 }
